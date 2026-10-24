@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Znajdź szybką pracę w swojej okolicy. BliskoPraca — zlecenia blisko domu.">
+  <title>BliskoPraca — praca blisko domu</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f8f5;
+      color: #18352a;
+    }
+    header {
+      background: white;
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2eae3;
+    }
+    .logo { font-size: 25px; font-weight: bold; color: #176b52; }
+    .logo span { color: #18352a; }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .primary { background: #176b52; color: white; }
+    .hero {
+      padding: 65px 7% 40px;
+      background: #e7f3eb;
+    }
+    .hero h1 { font-size: clamp(36px, 6vw, 60px); margin: 0 0 20px; }
+    .hero h1 span { color: #176b52; }
+    .hero p { font-size: 18px; line-height: 1.6; max-width: 600px; }
+    .search {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    input, select {
+      padding: 13px;
+      border: 1px solid #d5e0d7;
+      border-radius: 9px;
+      background: white;
+      font-size: 15px;
+      min-width: 150px;
+    }
+    main { padding: 35px 7%; }
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 38px;
+    }
+    .benefit, .job {
+      background: white;
+      padding: 20px;
+      border: 1px solid #e0e9e1;
+      border-radius: 15px;
+    }
+    h2 { margin-bottom: 10px; }
+    .jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .job h3 { margin-bottom: 8px; }
+    .muted { color: #68796e; line-height: 1.5; }
+    .price { font-size: 23px; font-weight: bold; color: #176b52; }
+    .job button { margin-top: 12px; }
+    .badge {
+      display: inline-block;
+      background: #e7f3eb;
+      color: #176b52;
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+    footer {
+      padding: 25px 7%;
+      background: #18352a;
+      color: white;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .notice { font-size: 12px; color: #68796e; }
+    @media (max-width: 600px) {
+      header { padding: 16px 5%; }
+      .hero { padding: 40px 5%; }
+      main { padding: 28px 5%; }
+      .search input, .search select { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">blisko<span>praca</span> ✳</div>
+    <button class="primary" onclick="showForm()">Dodaj zlecenie +</button>
+  </header>
+
+  <section class="hero">
+    <span class="badge">✦ Szybka praca w Twojej okolicy</span>
+    <h1>Masz kilka godzin?<br><span>Zarabiaj blisko.</span></h1>
+    <p>
+      Znajdź jednorazowe zlecenie blisko domu.
+      Sprawdź wynagrodzenie, lokalizację i termin
+      przed podjęciem pracy.
+    </p>
+    <div class="search">
+      <input id="city" placeholder="Miasto, np. Opole">
+      <select id="category">
+        <option value="all">Wszystkie kategorie</option>
+        <option value="home">Dom i ogród</option>
+        <option value="move">Przeprowadzki</option>
+        <option value="clean">Sprzątanie</option>
+        <option value="other">Inne</option>
+      </select>
+      <button class="primary" onclick="renderJobs()">Szukaj zleceń</button>
+    </div>
+  </section>
+
+  <main>
+    <section class="benefits">
+      <div class="benefit">
+        <h3>⚡ Nawet na dziś</h3>
+        <p class="muted">Szukaj krótkich zleceń i pilnych prac.</p>
+      </div>
+      <div class="benefit">
+        <h3>📍 Blisko domu</h3>
+        <p class="muted">Zacznij od swojej miejscowości.</p>
+      </div>
+      <div class="benefit">
+        <h3>💰 Jasna stawka</h3>
+        <p class="muted">Sprawdź proponowane wynagrodzenie.</p>
+      </div>
+    </section>
+
+    <h2>Zlecenia w pobliżu</h2>
+    <p class="muted">Przykładowe oferty — na razie demonstracyjne.</p>
+    <section id="jobs" class="jobs"></section>
+
+    <section id="form" class="benefit" style="margin-top:35px;display:none">
+      <h2>Dodaj zlecenie</h2>
+      <p class="muted">Wersja testowa — oferta będzie widoczna tylko w tej sesji.</p>
+      <form id="jobForm">
+        <p><input id="title" placeholder="Nazwa zlecenia" required></p>
+        <p><input id="jobCity" placeholder="Miasto" required></p>
+        <p>
+          <select id="jobCategory">
+            <option value="home">Dom i ogród</option>
+            <option value="move">Przeprowadzki</option>
+            <option value="clean">Sprzątanie</option>
+            <option value="other">Inne</option>
+          </select>
+        </p>
+        <p><input id="pay" type="number" min="1" placeholder="Wynagrodzenie w zł" required></p>
+        <p><input id="description" placeholder="Krótki opis pracy" required></p>
+        <button class="primary" type="submit">Dodaj ofertę</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <strong>BliskoPraca</strong> — podjęcie pracy bliżej domu.<br>
+    Opole · Wrocław · Warszawa<br>
+    Oferty demonstracyjne. Serwis jest w fazie testowej.
+  </footer>
+
+  <script>
+    let jobs = [
+      {title:"Pomoc przy przeprowadzce",city:"Wrocław",category:"move",pay:90,description:"Pomoc przy noszeniu mebli. Około 3 godziny."},
+      {title:"Sprzątanie mieszkania",city:"Opole",category:"clean",pay:70,description:"Jednorazowe sprzątanie mieszkania."},
+      {title:"Pomoc w ogrodzie",city:"Warszawa",category:"home",pay:120,description:"Porządkowanie ogrodu i grabienie liści."},
+      {title:"Montaż małej szafy",city:"Opole",category:"other",pay:80,description:"Pomoc przy montażu mebli."},
+      {title:"Pomoc przy pakowaniu",city:"Warszawa",category:"other",pay:110,description:"Krótkie zlecenie przy pakowaniu przesyłek."}
+    ];
+
+    function renderJobs() {
+      const city = document.getElementById("city").value.trim().toLowerCase();
+      const category = document.getElementById("category").value;
+
+      const filtered = jobs.filter(job =>
+        (!city || job.city.toLowerCase().includes(city)) &&
+        (category === "all" || job.category === category)
+      );
+
+      document.getElementById("jobs").innerHTML = filtered.length
+        ? filtered.map(job => `
+          <article class="job">
+            <span class="badge">Przykładowa oferta</span>
+            <h3>${escapeHTML(job.title)}</h3>
+            <p class="muted">📍 ${escapeHTML(job.city)}</p>
+            <p class="muted">${escapeHTML(job.description)}</p>
+            <div class="price">${job.pay} zł <small>/ zlecenie</small></div>
+            <button class="primary" onclick="alert('To wersja demonstracyjna. Kontakt i zgłoszenia zostaną dodane w kolejnej wersji.')">Jestem zainteresowany</button>
+          </article>
+        `).join("")
+        : "<p>Brak ofert. Spróbuj zmienić miasto lub kategorię.</p>";
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;",
+        '"':"&quot;", "'":"&#39;"
+      })[char]);
+    }
+
+    function showForm() {
+      const form = document.getElementById("form");
+      form.style.display = "block";
+      form.scrollIntoView({behavior:"smooth"});
+    }
+
+    document.getElementById("jobForm").addEventListener("submit", event => {
+      event.preventDefault();
+      jobs.unshift({
+        title:document.getElementById("title").value,
+        city:document.getElementById("jobCity").value,
+        category:document.getElementById("jobCategory").value,
+        pay:Number(document.getElementById("pay").value),
+        description:document.getElementById("description").value
+      });
+      event.target.reset();
+      renderJobs();
+      alert("Oferta dodana do wersji demonstracyjnej. Nie została opublikowana w internecie.");
+      document.getElementById("jobs").scrollIntoView({behavior:"smooth"});
+    });
+
+    renderJobs();
+  </script>
+</body>
+</html>
